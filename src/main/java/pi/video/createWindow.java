@@ -251,3 +251,144 @@ public class createWindow {
         passwordPanel.add(passwordText);
         passwordText.setColumns(10);
        
+        /* Создание кнопки для формирование отчета
+         * setVisible(false) - делает кнопку невидимой
+         */
+        final JButton reportButton = new JButton("Сформировать отчет");
+        reportButton.setVisible(false);
+        /* Создаем слушатель для кнопки */
+        reportButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    /*Вызов метода для создания отчета */
+                    showReport();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        reportButton.setBounds(202, 438, 198, 23);
+        frame.getContentPane().add(reportButton);
+       
+        /* Создание кнопки для авторизации администратора */
+        JButton passwordButton = new JButton("Войти");
+        passwordButton.setBounds(247, 54, 128, 23);
+        passwordPanel.add(passwordButton);
+        /* Создаем слушатель для кнопки */
+        passwordButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                /* Проверка на правильность введенного пароля */
+                if (passwordText.getText().equals(ADMIN_PASSWORD)) {
+                    /* В случае ввода верного пароля, панель авторизации становится невидимой
+                     * Кнопка создания отчета становится видимой
+                     */
+                    passwordPanel.setVisible(false);
+                    reportButton.setVisible(true);
+                } else {
+                    /* В случае ошибки ввода пароля, выводится сообщение об ошибке */
+                    JOptionPane.showMessageDialog(null, "Неверный пароль администратора", "Ошибка", JOptionPane.WARNING_MESSAGE);
+                }
+                   
+            }
+        });
+        /* Установка цвета кнопки */
+        passwordButton.setBackground(Color.PINK);
+    }
+   
+    //Метод setArrayValues реализующий добавление значений из textField-ов в массив
+    public void setArrayValues() {
+        calcValues[0] = Integer.parseInt(widthText.getText());
+        calcValues[1] = Integer.parseInt(heightText.getText());
+        calcValues[2] = Integer.parseInt(colorText.getText());
+        calcValues[3] = Integer.parseInt(fpsText.getText());
+        calcValues[4] = Integer.parseInt(timeText.getText());
+        calcValues[5] = Integer.parseInt(soundText.getText());
+        calcValues[6] = Integer.parseInt(gzText.getText());
+    }
+    /* Метод isNumeric проверяющий является ли введенная строка - числом */
+    public static boolean isNumeric(String str)  
+    {  
+      try  
+      {  
+        /* Попытка преобразовать значение типа String в Double */
+        double d = Double.parseDouble(str);  
+      }  
+      catch(NumberFormatException nfe)  
+      {  
+        /* При возникновении ошибок - возвращает false (значение не является числом) */  
+        return false;  
+      }  
+      /* Если не было ошибок - возвращает true (значение является числом) */
+      return true;  
+    }
+    /* Метод isNumericValues проверяющий являются ли числами все введенные значения */
+    public boolean isNumericValues() {
+        if (    !isNumeric(widthText.getText())  ||
+                !isNumeric(heightText.getText()) ||
+                !isNumeric(colorText.getText())  ||
+                !isNumeric(fpsText.getText())    ||
+                !isNumeric(timeText.getText())   ||
+                !isNumeric(soundText.getText())  ||
+                !isNumeric(gzText.getText()) )
+            return false;
+        else
+            return true;
+    }
+ 
+    //Метод getArrayOfValues реализующий передачу данных из массива calcValues в класс Calculate
+    public double[] getArrayOfValues() {
+        return calcValues;
+    }
+   
+    //Метод isTextFieldEmpty реализующий проверку textField-ов на пустоту
+    public boolean isTextFieldEmpty() {
+        /* getText() - берет значение из текстового поля,
+         * trim()    - удаляет пробелы,
+         * isEmpty() - проверяет пустое значение или нет */
+        if(     widthText.getText().trim().isEmpty()   ||
+                heightText.getText().trim().isEmpty() ||
+                colorText.getText().trim().isEmpty() ||
+                fpsText.getText().trim().isEmpty() ||
+                timeText.getText().trim().isEmpty() ||
+                soundText.getText().trim().isEmpty() ||
+                gzText.getText().trim().isEmpty() ||
+                widthText.getText().trim().isEmpty())
+        {
+            return true;
+        } else
+            return false;
+    }
+   
+    /* Метод toValidate реализующий проверку значений на положительность */
+    public boolean toValidate(double textFieldValue) {
+        boolean er;
+        if (textFieldValue <= 0 || textFieldValue >= 1000000)
+            er= true;
+         else
+            er = false;
+        return er;
+    }
+   
+    /* Метод showReport реализующй возможность создания txt файла с отчетом о расчетах */
+    public void showReport() throws Exception {
+        /* Открытие потока FileWriter. Открытие файла Oтчет.txt
+         * Каждый раз при использовании метода showReport - файл перезаписывается
+         * При отсутствии файла, файл создается
+         * write() - записывает значения в файл
+         * close() - закрывает поток записи FileWriter
+         * \n - перемещает ввод на строку вниз
+         */
+        FileWriter nFile = new FileWriter("Отчет.txt");
+       
+        nFile.write("Ширина изображения: "         + widthText.getText()   + "\n" +
+                    "Высота изображения: "         + heightText.getText()  + "\n" +
+                    "Глубина цвета: "           + colorText.getText()   + "\n" +
+                    "Количество кадров: "       + fpsText.getText()     + "\n" +
+                    "Длительность видео: "         + timeText.getText()    + "\n" +
+                    "Разрядность звука: "       + soundText.getText()   + "\n" +
+                    "Частота дискретизации: "   + gzText.getText()      + "\n" +
+                    "------------------------------------------------"  + "\n" +
+                    "Результат "               + resultText.getText()  + "\n");
+        nFile.close();
+    }
+}
