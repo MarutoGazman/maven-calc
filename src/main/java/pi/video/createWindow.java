@@ -142,3 +142,112 @@ public class createWindow {
  
        
        
+        /*
+         * Создаем надписи (лейблы)
+         * setBounds()              - устанавливает положение элемента и его размеры
+         * getContentPane().add()   - добавление элемента в окно программы
+         */
+        JLabel widthLabel = new JLabel("Ширина изображения (px)");
+        widthLabel.setBounds(55, 126, 204, 14);
+        frame.getContentPane().add(widthLabel);
+       
+        JLabel heightLabel = new JLabel("Высота изображения (px)");
+        heightLabel.setBounds(55, 157, 204, 14);
+        frame.getContentPane().add(heightLabel);
+       
+        JLabel colorLabel = new JLabel("Глубина цвета (бит)");
+        colorLabel.setBounds(55, 188, 204, 14);
+        frame.getContentPane().add(colorLabel);
+       
+        JLabel fpsLabel = new JLabel("Количество кадров (шт)");
+        fpsLabel.setBounds(55, 219, 204, 14);
+        frame.getContentPane().add(fpsLabel);
+       
+        JLabel timeLabel = new JLabel("Длительность видео (сек)");
+        timeLabel.setBounds(55, 250, 204, 14);
+        frame.getContentPane().add(timeLabel);
+       
+        JLabel soundLabel = new JLabel("Разрядность звука (бит)");
+        soundLabel.setBounds(55, 281, 204, 14);
+        frame.getContentPane().add(soundLabel);
+       
+        JLabel gzLabel = new JLabel("Частота дискретизации (Гц)");
+        gzLabel.setBounds(55, 312, 204, 14);
+        frame.getContentPane().add(gzLabel);
+        //*********************************************************\\
+       
+        //Создаем кнопку
+        JButton resultButton = new JButton("Рассчитать");
+        //Создаем слушатель для кнопки
+        resultButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                //Проверка textField-ов на пустоту
+                if(isTextFieldEmpty())
+                    //Если хотябы одно из полей пустое - выводим окно JOptionPane.showMessageDialog с сообщением об ошибке
+                    JOptionPane.showMessageDialog(null, "Все поля обязательны для заполнения!", "Ошибка", JOptionPane.WARNING_MESSAGE);
+               
+                //Проверка введены ли числовые значения
+                if(isNumericValues() == true)
+                    //Заполняем массив значениями из textField-ов 
+                    setArrayValues();
+                else
+                    //Если введены не числовые значения, выводим окно с сообщением об ошибке
+                    JOptionPane.showMessageDialog(null, "Введите числовые значения!", "Ошибка", JOptionPane.WARNING_MESSAGE);
+               
+                //Устанавливаем значение по умолчанию для переменной error информирующей об ошибке в заполнении полей
+                error = false;
+                //Проходим циклом по всем значениям массива calcValues
+                for(int i = 0; i < 7; i++) {
+                    //Проверяем значения массива методом toValidate
+                    if(toValidate(calcValues[i]) == true) {
+                        error = true;
+                        break;
+                    }
+                       
+                }
+                //Если значение переменной error - истина, выводим окно с сообщением об ошибке
+                if (error == true) {
+                    JOptionPane.showMessageDialog(null, "Введите положительные значения\nКалькулятор не поддерживает значения больше 1000000", "Ошибка", JOptionPane.WARNING_MESSAGE);
+                } else {
+                //Иначе выполняем вычисления в классе Calculate
+                    //Создаем экземпляр класса calculate
+                    Calculate calculate = new Calculate();
+                    //Выводим значение полученное в классе Calculate в текстовое поле
+                    resultText.setText((calculate.toFormateResult())); 
+                }
+            }
+        });
+        resultButton.setBounds(269, 356, 131, 23);
+        frame.getContentPane().add(resultButton);
+       
+        /* Создание текстового поля
+         * setBounds()              - устанавливает положение элемента и его размеры
+         * getContentPane().add()   - добавление элемента в окно программы
+         * setColumns()             - изменение длинны строки
+         */
+        resultText = new JTextField();
+        resultText.setBounds(269, 406, 131, 20);
+        frame.getContentPane().add(resultText);
+        resultText.setColumns(10);
+       
+        //Создание лейбла
+        JLabel resultLabel = new JLabel("Результат:");
+        resultLabel.setBounds(142, 409, 117, 14);
+        frame.getContentPane().add(resultLabel);
+       
+        final JPanel passwordPanel = new JPanel();
+        passwordPanel.setBounds(21, 11, 398, 88);
+        frame.getContentPane().add(passwordPanel);
+        passwordPanel.setLayout(null);
+       
+        JLabel passwordLabel = new JLabel("Пароль администратора:");
+        passwordLabel.setBounds(34, 28, 203, 14);
+        passwordPanel.add(passwordLabel);
+       
+        /* Создание текстового поля для ввода паролей */
+        passwordText = new JPasswordField();
+        passwordText.setText("admin");
+        passwordText.setBounds(247, 25, 128, 20);
+        passwordPanel.add(passwordText);
+        passwordText.setColumns(10);
+       
